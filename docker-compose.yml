@@ -1,0 +1,54 @@
+version: "3.8"
+
+services:
+  consumer:
+    build:
+      context: ./app/ConsumerService
+    ports:
+      - "4567:4567"
+    environment:
+      DB_HOST: db
+      DB_NAME: clew_medical
+      DB_USER: avidb
+      DB_PASSWORD: password
+      RABBIT_HOST: rabbitmq
+      RABBIT_USER: avi
+      RABBIT_PASS: avipass
+    volumes:
+      - ./app/ConsumerService:/code
+    depends_on:
+      - db
+      - rabbitmq
+
+  publisher:
+    build:
+      context: ./app/PublisherService
+    environment:
+      RABBIT_HOST: rabbitmq
+      RABBIT_USER: avi
+      RABBIT_PASS: avipass
+    volumes:
+      - ./app/PublisherService:/code
+    depends_on:
+      - rabbitmq
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: avi
+      RABBITMQ_DEFAULT_PASS: avipass
+    ports:
+      - 5672:5672
+      - 15672:15672
+
+  db:
+    image: mysql:8
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: clew_medical
+      MYSQL_USER: avidb
+      MYSQL_PASSWORD: password
