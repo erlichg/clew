@@ -10,6 +10,6 @@ def test_publish():
 
         publish_events(channel)
 
-        # check number of messages > 0
+        # check existing messages
         message = channel.basic_get(q_name, auto_ack=True)
         assert message is not (None, None, None)
