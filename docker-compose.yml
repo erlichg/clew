@@ -7,15 +7,13 @@ services:
     ports:
       - "4567:4567"
     environment:
-      DB_HOST: db
+      DB_HOST: postgresdb
       DB_NAME: clew_medical
       DB_USER: admin
       DB_PASSWORD: password
       RABBIT_HOST: rabbitmq
       RABBIT_USER: admin
       RABBIT_PASS: password
-#    volumes:
-#      - #todo
     depends_on:
       - postgresdb
       - rabbitmq
@@ -27,8 +25,6 @@ services:
       RABBIT_HOST: rabbitmq
       RABBIT_USER: admin
       RABBIT_PASS: password
-#    volumes:
-#      - #todo
     depends_on:
       - rabbitmq
 
@@ -46,6 +42,9 @@ services:
     image: postgres:12.0
     container_name: postgresdb
     environment:
+      POSTGRES_USER: admin
+      POSTGRES_DB: clew_medical
+      POSTGRES_PASSWORD: password
       PGDATA: var/lib/postgresql/data/pgdata
     volumes:
       - ./data/postgres:/var/lib/postgresql/data/pgdata
