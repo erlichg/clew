@@ -1,22 +1,8 @@
 version: "3.8"
 
 services:
-  consumer:
-    build:
-      context: ./ConsumerService
-    ports:
-      - "4567:4567"
-    environment:
-      DB_HOST: postgresdb
-      DB_NAME: clew_medical
-      DB_USER: admin
-      DB_PASSWORD: password
-      RABBIT_HOST: rabbitmq
-      RABBIT_USER: admin
-      RABBIT_PASS: password
-    depends_on:
-      - postgresdb
-      - rabbitmq
+#  consumer:
+#todo
 
   publisher:
     build:
