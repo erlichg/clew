@@ -73,3 +73,24 @@ calling consumer api
 curl http://localhost:8000/records/1
 {'error': null, 'data': {'X': [("2021-01-01T00:00:00+0000", "2021-01-01T01:00:00+0000")]}}
 ```
+
+## docker-compose parameters
+### Consumer
+```
+RABBIT_HOST: RabbitMQ container name
+RABBIT_USER: RabbitMQ user
+RABBIT_PASS: RabbitMQ password
+POSTGRES_HOST: The DB container name
+POSTGRES_USER: The DB user
+POSTGRES_DB: The DB name
+POSTGRES_PASSWORD: The DB password
+POSTGRES_TABLE: The name of the table in which to store events
+WEB_ADDR: The address the web server is listening on
+WEB_PORT: The port the web server is listening on
+```
+### Publisher
+```
+RABBIT_HOST: RabbitMQ container name
+RABBIT_USER: RabbitMQ user
+RABBIT_PASS: RabbitMQ password
+```
