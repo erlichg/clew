@@ -1,3 +1,4 @@
+from ConsumerService.consumer.utils import ACTIONS
 import json
 import asyncio
 import json
@@ -68,11 +69,16 @@ async def on_message(message):
     This method runs on every message received from queue. It just parses the json and adds to DB
     """
     async with message.process():
-        msg = json.loads(message.body)
-        if msg:
-            db.execute(f"""
-            INSERT INTO {DB_TABLE}(p_id,medication_name,action,event_time) VALUES(%s,%s,%s,%s)
-            """, (msg['p_id'], msg['medication_name'], msg['action'], msg['event_time']))
+        try:
+            msg = json.loads(message.body)
+            if msg:
+                if msg['action'] not in ACTIONS:
+                    raise Exception('Invalid action')
+                db.execute(f"""
+                INSERT INTO {DB_TABLE}(p_id,medication_name,action,event_time) VALUES(%s,%s,%s,%s)
+                """, (msg['p_id'], msg['medication_name'], msg['action'], msg['event_time']))
+        except Exception as e:
+            print('Error parsing message from queue: '+str(e))
 
 
 async def setup_rabbitmq():
