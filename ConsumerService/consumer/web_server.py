@@ -1,9 +1,15 @@
-from ConsumerService.consumer.utils import calculate_periods
+## try absolute import (needed for running in dev)
+## relative import in prod
+try:
+    from ConsumerService.consumer.utils import calculate_periods
+    from ConsumerService.consumer.db import DB
+except:
+    from .utils import calculate_periods
+    from .db import DB
 from sanic import Sanic
 from sanic.response import json as json_response
 import os
 import json
-from ConsumerService.consumer.db import DB
 
 class WebServer:
     app = Sanic('clew_medical')

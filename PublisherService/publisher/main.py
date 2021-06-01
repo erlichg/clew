@@ -3,6 +3,7 @@ import asyncio
 import json
 import os
 import site
+import sys
 
 from aio_pika import connect, ExchangeType, Message, DeliveryMode
 
@@ -19,11 +20,22 @@ async def _main(loop):
 
 
 async def setup_rabbitmq(loop):
-    connection = await connect(host=os.environ.get('RABBIT_HOST'),
-                               login=os.environ.get('RABBIT_USER'),
-                               password=os.environ.get('RABBIT_PASS'),
-                               loop=loop
-                               )
+    _try = 1
+    while _try < 5:
+        try:
+            connection = await connect(host=os.environ.get('RABBIT_HOST'),
+                                login=os.environ.get('RABBIT_USER'),
+                                password=os.environ.get('RABBIT_PASS'),
+                                loop=loop,
+                                )
+            break
+        except:
+            #try again
+            _try = _try + 1
+            await asyncio.sleep(5)
+    if not connection:
+        print('Error connecting to RabbitMQ')
+        sys.exit(1)
     # Creating a channel
     channel = await connection.channel()
     exchange = await channel.declare_exchange(

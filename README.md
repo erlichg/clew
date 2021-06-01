@@ -44,7 +44,7 @@ cancel_start cancels the period and cancel_stop cancels the previous stopping pe
 ## Tests
 A unittest file is included in the Consumer package.
 It tests all period calculation validations.
-Further testing can be made on message receiving logic althout it is quite simple (just receiving the message and storing it).
+Further testing can be made on message receiving logic although it is quite simple (just receiving the message and storing it).
 
 ## Optimizations
 Currently all calculations are done when calling the API.
