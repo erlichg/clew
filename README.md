@@ -14,7 +14,9 @@ An event has the following fields: patient_id, medication_name, action and event
 ## Consumer
 The Consumer docker is an always on service. It listens to RabbitMQ and for each message received, it stores them in postgres DB.
 It also raises a simple web server (port 8000) with one api: /records/<id> which returns a list of medication periods for patient with this id.
-The api output is a dictionary with medication name as keys and values is a list of tuples that represent a period (start, end).
+The api output is a dictionary with error and data keys.
+The error is null if no error or a string of the error encountered in calculation.
+The data is a dict with medication name as keys and values is a list of tuples that represent a period (start, end).
 An open period (i.e. start without stop) is represented by (start, )
 
 ### How period calculation works
@@ -69,5 +71,5 @@ events.json
 calling consumer api
 ```
 curl http://localhost:8000/records/1
-{'X': [("2021-01-01T00:00:00+0000", "2021-01-01T01:00:00+0000")]}
+{'error': null, 'data': {'X': [("2021-01-01T00:00:00+0000", "2021-01-01T01:00:00+0000")]}}
 ```
