@@ -2,11 +2,17 @@ import json
 import asyncio
 import json
 import os
+import site
 
 from aio_pika import connect, ExchangeType, Message, DeliveryMode
 
 
-async def main(loop):
+def main():
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(_main(loop))
+
+
+async def _main(loop):
     connection, exchange = await setup_rabbitmq(loop)
     await publish_events(exchange)
     await connection.close()
@@ -23,14 +29,16 @@ async def setup_rabbitmq(loop):
     exchange = await channel.declare_exchange(
         "meds", ExchangeType.FANOUT
     )
-    queue = await channel.declare_queue(name='events', auto_delete=True)
+    queue = await channel.declare_queue(name='events')
 
     await queue.bind(exchange, "new.events")
     return connection, exchange
 
 
 async def publish_events(exchange):
-    with open("events.json") as f:
+    dir = site.getsitepackages()[0]
+    file = os.path.join(dir, 'publisher', 'events.json')
+    with open(file) as f:
         events = json.load(f)
         for event in events:
             message = Message(
@@ -42,5 +50,4 @@ async def publish_events(exchange):
 
 
 if __name__ == '__main__':
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(main(loop))
+    main()

@@ -1,8 +1,24 @@
 version: "3.8"
 
 services:
-#  consumer:
-#todo
+  consumer:
+    build:
+      context: ./ConsumerService
+    environment:
+      RABBIT_HOST: rabbitmq
+      RABBIT_USER: admin
+      RABBIT_PASS: password
+      POSTGRES_HOST: postgresdb
+      POSTGRES_USER: admin
+      POSTGRES_DB: clew_medical
+      POSTGRES_PASSWORD: password
+      POSTGRES_TABLE: events
+      WEB_ADDR: 0.0.0.0
+      WEB_PORT: 8000
+    ports:
+      - 8000:8000
+    depends_on:
+      - rabbitmq
 
   publisher:
     build:
@@ -31,8 +47,11 @@ services:
       POSTGRES_USER: admin
       POSTGRES_DB: clew_medical
       POSTGRES_PASSWORD: password
-      PGDATA: var/lib/postgresql/data/pgdata
+      PGDATA: /var/lib/postgresql/data/pgdata
     volumes:
-      - ./data/postgres:/var/lib/postgresql/data/pgdata
+      - pgdata:/var/lib/postgresql/data/pgdata
     ports:
       - "5432:5432"
+volumes:
+  pgdata:
+    external: true

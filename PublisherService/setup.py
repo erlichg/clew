@@ -15,6 +15,8 @@ setup(
               'publisher = publisher.main:main'
           ],
       },
+    package_data={'': ['events.json']},
+    include_package_data=True,
     install_requires=install_requires,
     test_suite="tests",
     zip_safe=False)

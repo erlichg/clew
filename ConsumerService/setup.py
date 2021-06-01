@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 
-install_requires = ['aio_pika']
+install_requires = ['aio_pika', 'asyncio', 'psycopg2-binary', 'sanic']
 
 setup(
     name='consumer',
